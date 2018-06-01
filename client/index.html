@@ -23,7 +23,7 @@
 				<th>Description</th>
 				<th>Amount</th>
 				<th>Category</th>
-				<th></th>
+				<th>Set Category</th>
 			</tr>
 			<tr v-for="transaction in transactions">
 				<td>{{ transaction.date }}</td>
@@ -32,9 +32,9 @@
 				<td>{{ transaction.category }}</td>
 
 				<td>
-					<select v-model="categories">
-						<option disabled value="">None</option>
-						<option v-for="category in categories" v-bind:value="transaction.category">
+					<select v-model="transaction.category">
+						<option value="">None</option>
+						<option v-for="category in categories" v-bind:value="category.category">
 							{{ category.category }}
 						</option>
 					</select>
