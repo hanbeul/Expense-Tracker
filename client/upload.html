@@ -1,0 +1,40 @@
+<!-- development version, includes helpful console warnings -->
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script defer src="https://use.fontawesome.com/releases/v5.0.7/js/all.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.1/css/bulma.css" />
+<link rel="stylesheet" href="style.css" />
+
+<div class="columns is-centered">
+	<div id="upload" class="column box has-text-centered is-narrow">
+		<h3 class="title">Transactions</h3>
+		<table class="table">
+			<tr>
+				<th>Date</th>
+				<th>Description</th>
+				<th>Amount</th>
+			</tr>
+			<tr v-for="transaction in transactions">
+				<td>{{ transaction.date }}</td>
+				<td>{{ transaction.name }}</td>
+				<td>{{ transaction.amount }}</td>
+			</tr>
+		</table>
+	</div>
+</div>
+
+<script>
+	var app = new Vue({
+		el: "#upload",
+		data: {
+			transactions: []
+		},
+		created () {
+			var vm = this
+			axios.get('http://localhost:3000/api')
+				.then(function (response) {
+					vm.transactions = response.data
+				})
+		}
+	})
+</script>

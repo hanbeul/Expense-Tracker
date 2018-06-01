@@ -1,0 +1,119 @@
+<!-- development version, includes helpful console warnings -->
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.js"></script>
+<script defer src="https://use.fontawesome.com/releases/v5.0.7/js/all.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.1/css/bulma.css" />
+<link rel="stylesheet" href="style.css" />
+
+<title>Banking DB</title>
+
+
+<div class="columns">
+
+	<div class="column is-half box">
+		<canvas id="myChart"></canvas>
+	</div>
+
+	<div id="app" class="column is-half box has-text-centered">
+		<h3 class="title">Transactions</h3>
+		<table class="table is-fullwidth is-hoverable">
+			<tr>
+				<th>Date</th>
+				<th>Description</th>
+				<th>Amount</th>
+				<th>Category</th>
+				<th></th>
+			</tr>
+			<tr v-for="transaction in transactions">
+				<td>{{ transaction.date }}</td>
+				<td>{{ transaction.name }}</td>
+				<td>${{ parseFloat(transaction.amount).toFixed(2) }}</td>
+				<td>{{ transaction.category }}</td>
+
+				<td>
+					<select v-model="categories">
+						<option disabled value="">None</option>
+						<option v-for="category in categories" v-bind:value="transaction.category">
+							{{ category.category }}
+						</option>
+					</select>
+				</td>
+
+			</tr>
+		</table>
+	</div>
+
+</div>
+
+<script>
+	var app = new Vue({
+		el: "#app",
+		data: {
+			categories: [],
+			transactions: []
+		},
+		created () {
+			this.getCategories();
+			this.getTransactions();
+		}, 
+		methods: {
+			getTransactions: function() {
+				var vm = this;
+				axios.get('http://localhost:3000/api')
+					.then(function (response) {
+						vm.transactions = response.data;
+					})
+			},
+			getCategories: function() {
+				var vm = this;
+				axios.get('http://localhost:3000/api/categories')
+					.then(function (response) {
+						console.log(response.data);
+						vm.categories = [{"category": "Food"}, {"category": "Entertainment"}];
+					})
+			}
+		}
+	});
+</script>
+
+
+<script>
+var ctx = document.getElementById("myChart").getContext('2d');
+var myChart = new Chart(ctx, {
+	type: 'bar',
+	data: {
+		labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
+		datasets: [{
+			label: '# of Votes',
+			data: [12, 19, 3, 5, 2, 3],
+			backgroundColor: [
+				'rgba(255, 99, 132, 0.2)',
+				'rgba(54, 162, 235, 0.2)',
+				'rgba(255, 206, 86, 0.2)',
+				'rgba(75, 192, 192, 0.2)',
+				'rgba(153, 102, 255, 0.2)',
+				'rgba(255, 159, 64, 0.2)'
+			],
+			borderColor: [
+				'rgba(255,99,132,1)',
+				'rgba(54, 162, 235, 1)',
+				'rgba(255, 206, 86, 1)',
+				'rgba(75, 192, 192, 1)',
+				'rgba(153, 102, 255, 1)',
+				'rgba(255, 159, 64, 1)'
+			],
+			borderWidth: 1
+		}]
+	},
+	options: {
+		scales: {
+			yAxes: [{
+				ticks: {
+					beginAtZero:true
+				}
+			}]
+		}
+	}
+});
+</script>
