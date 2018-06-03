@@ -51,6 +51,7 @@
 		el: "#app",
 		data: {
 			categories: [],
+			categoryTotals: [],
 			transactions: []
 		},
 		created () {
@@ -69,8 +70,14 @@
 				var vm = this;
 				axios.get('http://localhost:3000/api/categories')
 					.then(function (response) {
-						console.log(response.data);
-						vm.categories = [{"category": "Food"}, {"category": "Entertainment"}];
+						vm.categories = response.data;
+					})
+			},
+			getCategorieTotals: function() {
+				var vm = this;
+				axios.get('http://localhost:3000/api/categories')
+					.then(function (response) {
+						vm.categoryTotals = [{"category": "Food"}, {"category": "Entertainment"}];
 					})
 			}
 		}
